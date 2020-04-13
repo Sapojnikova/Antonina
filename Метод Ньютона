@@ -1,0 +1,25 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from sympy import diff
+from sympy import symbols, lambdify 
+x = symbols('x') 
+def Newton( F, DF) :
+    dx = 0.0001
+    def F(x):
+        return math.exp(x) - 2
+    eps = 0.01
+    def DF(x):
+        return (F(x+dx)-F(x))/dx 
+    x0 = -2
+    xn = F(x0)
+    xn1 = xn-F(xn)/DF(xn)
+    i=0
+    while abs((xn1-xn)/(1- (xn1-xn)/(xn-x0))) > eps:
+        x0 = xn
+        xn = xn1 
+        xn1 = xn-F(xn)/DF(xn)
+        i+=1
+    return xn1
+xn1 = Newton ( F, DF) 
+print(xn1)
