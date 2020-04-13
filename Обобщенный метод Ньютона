@@ -1,0 +1,28 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from sympy import diff
+from sympy import symbols, lambdify 
+x = symbols('x')
+dx = 0.0001
+def F(x):
+    return math.exp(x) - 2
+def DF(x):
+    return (F(x+dx)-F(x))/dx  
+def NewNewton( F, DF) :
+    eps = 0.1
+    x0 = -2
+    xn = F(x0)
+    k=1
+    xn1 = xn-F(xn)/DF(xn)
+    while abs((xn1-xn)/(1- (xn1-xn)/(xn-x0))) > eps:
+        x0 = xn
+        xn = xn1 
+        ksi = -F(xn)/DF(xn)
+        xn1= xn + ksi
+        tau = ((F(xn))**2+ 0.1*F(xn1)**2)/( F(xn)**2+ F(xn1)**2)
+        xn1 = xn+ ksi*tau
+        k+=1
+    return xn1
+xn1 = NewNewton ( F, DF) 
+print( xn1 )
