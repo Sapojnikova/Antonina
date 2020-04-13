@@ -1,0 +1,25 @@
+from sympy import symbols, lambdify 
+x = symbols('x') 
+
+import matplotlib.pyplot as plt 
+
+def dihot (f, a, b, eps): 
+    iterations = 0 
+    while abs(a-b) > eps: 
+       iterations += 1 
+       x = (a + b) / 2 
+       if f(a)*f(x) < 0: 
+           b = x 
+       else: 
+           a = x 
+    return x 
+func1 = (x - 1) * (x - 2)**2 * (x - 3)**3 
+f = (x - 1) * (x - 2) **2* (x - 3)**3 
+funcc = lambdify([x], func1) 
+f = funcc
+for i in range(3): 
+    x0 = dihot(f, 0, 5, 0.01) 
+    print(x0)
+    func1 = func1/(x-x0) 
+    funcc = lambdify([x], func1) 
+    f = funcc
