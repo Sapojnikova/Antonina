@@ -1,0 +1,74 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+q = 2
+s = 100
+
+def trapezoidal(f, a, b, n):
+	h = (b - a)/n
+	result = 0.5*(f(a) + f(b))
+
+	for i in range(1, n):
+		result += f(a + i*h)
+
+	result *= h
+	return result
+
+def F(x):
+    return 1/(1+x**2)
+    
+n = 1
+r = 2
+
+#un = trapezoidal(F, -1 , 1, n)
+#print(un)
+
+K = 8
+p = 2
+
+x = np.zeros((K, K))
+rn = np.zeros((K, K-1))
+P = np.zeros((K, K-2))
+    
+for k in range(0, K):
+    x[k, 0] = trapezoidal(F, -1, 1, (r**k)*n)
+
+for t in range(0, K):
+    
+    for k in range(1, K):
+        if t < k:
+            rn[k, t] = (x[k, t]-x[k-1, t])/(r**p-1)
+
+        if t <= k-1 and t != K-1:
+            x[k, t+1] = x[k, t] + rn[k, t]
+            
+            if t <= k-2:
+                P[k, t] = np.abs (np.log2(np.abs(rn[k, t]/rn[k-1, t])))
+                
+    p += q
+
+            
+#print(x)
+#print(rn)
+#print(P)
+
+print('=> u')
+for k in range(K):
+    for t in range(k+1):
+        print(f'{x[k, t]:>7.4f}', end=' '*3)
+    print()
+print('\n\n')
+
+print('=> R\n')
+for k in range(1, K):
+    for t in range(k):
+        print(f'{rn[k, t]:>7.4f}', end=' '*3)
+    print()
+print('\n\n')
+
+print('=> p (eff)\n\n')
+for k in range(2, K):
+    for t in range(k-1):
+        print(f'{P[k, t]:>7.4f}', end=' '*3)
+    print()
+print('\n\n')
